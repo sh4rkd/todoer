@@ -10,6 +10,9 @@ def create_app(test_config=None):
         DATABASE_USER=os.environ.get('FLASK_DATABASE_USER'),
         DATABASE=os.environ.get('FLASK_DATABASE')
     )
+
+    from . import db
+    db.init_app(app)
     
     @app.route('/hello')
     def hello():

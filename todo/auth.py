@@ -54,3 +54,23 @@ def login():
             return redirect(url_for('index'))
         flash(error)
     return render_template('auth/login.html')
+
+@bp.before_app_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+    if user_id is None:
+        g.user = None
+    else:
+        db, c = get_db()
+        c.execute(
+            'SELECT * FROM user WHERE id = %s', (user_id,)
+        )
+        g.user = c.fetchone()
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view

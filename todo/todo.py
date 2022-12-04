@@ -17,7 +17,7 @@ def index():
     todos = c.fetchall()
     return render_template('todo/index.html', todos=todos)
 
-@bp.route('/create', methods=('GET', 'POST'))
+@bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
     if request.method == 'POST':
@@ -39,8 +39,12 @@ def create():
             return redirect(url_for('todo.index'))
     return render_template('todo/create.html')
 
-@bp.route('/update', methods=('GET', 'POST'))
+@bp.route('/<int:id>/update', methods=['GET', 'POST'])
 @login_required
-def update():
-    return ""
+def update(id):
+    return render_template('todo/update.html', todo=todo)
 
+@bp.route('/<int>:id/delete', methods=['POST'])
+@login_required
+def delete():
+    return ""
